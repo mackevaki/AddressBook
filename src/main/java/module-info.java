@@ -11,4 +11,6 @@ module ru.javabegin.javafx.addressbook {
 
     opens ru.javabegin.javafx.addressbook to javafx.fxml;
     exports ru.javabegin.javafx.addressbook;
+    exports ru.javabegin.javafx.addressbook.controllers;
+    opens ru.javabegin.javafx.addressbook.controllers to javafx.fxml;
 }

@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
+import ru.javabegin.javafx.addressbook.objects.Person;
 
 import java.io.IOException;
 
@@ -17,7 +19,17 @@ public class Main extends Application {
         stage.setMinWidth(400);
         stage.setScene(scene);
         stage.show();
+
+        testData();
     }
+
+    private void testData() {
+        CollectionAddressBook addressBook = new CollectionAddressBook();
+
+        addressBook.fillTestData();
+        addressBook.printCollection();
+    }
+
 
     public static void main(String[] args) {
         launch();

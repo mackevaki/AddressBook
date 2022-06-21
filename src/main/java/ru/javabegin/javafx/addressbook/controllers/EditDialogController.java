@@ -1,4 +1,4 @@
-package ru.javabegin.javafx.addressbook;
+package ru.javabegin.javafx.addressbook.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

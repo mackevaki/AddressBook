@@ -1,4 +1,4 @@
-package ru.javabegin.javafx.addressbook;
+package ru.javabegin.javafx.addressbook.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ru.javabegin.javafx.addressbook.Main;
 
 import java.io.IOException;
 
