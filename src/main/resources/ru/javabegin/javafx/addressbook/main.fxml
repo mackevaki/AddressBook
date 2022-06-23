@@ -19,12 +19,12 @@
                   <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnEdit" maxWidth="70.0" mnemonicParsing="false" prefHeight="25.0" text="Изменить">
+            <Button fx:id="btnEdit" maxWidth="70.0" mnemonicParsing="false" onAction="#showDialog" prefHeight="25.0" text="Изменить">
                <HBox.margin>
                   <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Удалить">
+            <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="25.0" onAction="#showDialog" prefWidth="70.0" text="Удалить">
                <HBox.margin>
                   <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
@@ -47,8 +47,8 @@
          <children>
             <TableView fx:id="tableAddressBook" prefHeight="228.0" prefWidth="354.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="157.99999618530273" text="ФИО" />
-                <TableColumn prefWidth="158.00001525878906" text="Телефон" />
+                <TableColumn fx:id="tableColumnFio" prefWidth="183.33334350585938" text="ФИО" />
+                <TableColumn fx:id="tableColumnPhone" prefWidth="174.0" text="Телефон" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

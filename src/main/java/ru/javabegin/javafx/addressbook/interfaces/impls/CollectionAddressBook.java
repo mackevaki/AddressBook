@@ -1,14 +1,15 @@
 package ru.javabegin.javafx.addressbook.interfaces.impls;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import ru.javabegin.javafx.addressbook.interfaces.AddressBook;
 import ru.javabegin.javafx.addressbook.objects.Person;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class CollectionAddressBook implements AddressBook {
 
-    private ArrayList<Person> personList = new ArrayList<>();
+    private ObservableList<Person> personList = FXCollections.observableArrayList();
 
     @Override
     public void add(Person person) {
@@ -25,7 +26,7 @@ public class CollectionAddressBook implements AddressBook {
         // т.к. записи хранятся в коллекции, ничего обновлять не нужно, в отличие от БД или файла
     }
 
-    public ArrayList<Person> getPersonList() {
+    public ObservableList<Person> getPersonList() {
         return personList;
     }
 
