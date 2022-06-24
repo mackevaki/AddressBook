@@ -14,17 +14,17 @@
    <children>
       <HBox maxHeight="50.0" prefHeight="50.0">
          <children>
-            <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#showDialog" prefHeight="25.0" prefWidth="70.0" text="Добавить">
+            <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#actionButtonPressed" prefHeight="25.0" prefWidth="70.0" text="Добавить">
                <HBox.margin>
                   <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnEdit" maxWidth="70.0" mnemonicParsing="false" onAction="#showDialog" prefHeight="25.0" text="Изменить">
+            <Button fx:id="btnEdit" maxWidth="70.0" mnemonicParsing="false" onAction="#actionButtonPressed" prefHeight="25.0" text="Изменить">
                <HBox.margin>
                   <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="25.0" onAction="#showDialog" prefWidth="70.0" text="Удалить">
+            <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="25.0" onAction="#actionButtonPressed" prefWidth="70.0" text="Удалить">
                <HBox.margin>
                   <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
