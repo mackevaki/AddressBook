@@ -10,18 +10,22 @@ import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
 import ru.javabegin.javafx.addressbook.objects.Person;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Main.class.getResource("main.fxml"));
+        fxmlLoader.setResources(ResourceBundle.getBundle("ru.javabegin.javafx.addressbook.locales.Locale", new Locale("ru")));
+
         Parent fxmlMain = fxmlLoader.load();
         MainController mainController = new MainController();
         mainController.setMainStage(stage);
 
         Scene scene = new Scene(fxmlMain, 320, 240);
-        stage.setTitle("Address Book");
+        stage.setTitle(fxmlLoader.getResources().getString("address_book"));
         stage.setMinHeight(500);
         stage.setMinWidth(400);
         stage.setScene(scene);

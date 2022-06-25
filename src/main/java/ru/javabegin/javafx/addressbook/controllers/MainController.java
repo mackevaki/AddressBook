@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -17,8 +18,10 @@ import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
 import ru.javabegin.javafx.addressbook.objects.Person;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MainController {
+public class MainController implements Initializable {
     private CollectionAddressBook addressBookImpl = new CollectionAddressBook();
     private Stage mainStage;
 
@@ -53,13 +56,13 @@ public class MainController {
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditDialogController editDialogController;
     private Stage editDialogStage;
+    private ResourceBundle resourceBundle;
 
-    public void setMainStage(Stage mainStage) {
-        this.mainStage = mainStage;
-    }
 
-    @FXML
-    private void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resourceBundle = resources;
+
         tableAddressBook.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         tableColumnFio.setCellValueFactory(new PropertyValueFactory<Person, String>("fio"));
@@ -69,6 +72,11 @@ public class MainController {
         fillData();
         initLoader();
     }
+
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
+    }
+
 
     private void initLoader() {
         try {
@@ -106,7 +114,7 @@ public class MainController {
     }
 
     private void updateCountLabel() {
-        labelCount.setText("Количество записей: " + addressBookImpl.getPersonList().size());
+        labelCount.setText(resourceBundle.getString("count") + ": " + addressBookImpl.getPersonList().size());
     }
 
     public void actionButtonPressed(ActionEvent event) {
@@ -117,9 +125,6 @@ public class MainController {
         }
 
         Button clickedButton = (Button) source;
-
-
-//        Window parentWindow = ((Node)event.getSource()).getScene().getWindow();
 
         switch (clickedButton.getId()) {
             case "btnAdd" -> {
@@ -151,4 +156,5 @@ public class MainController {
 
         editDialogStage.showAndWait();
     }
+
 }
