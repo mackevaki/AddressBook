@@ -8,6 +8,7 @@ module ru.javabegin.javafx.addressbook {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires org.controlsfx.controls;
 
     opens ru.javabegin.javafx.addressbook to javafx.fxml;
     exports ru.javabegin.javafx.addressbook;

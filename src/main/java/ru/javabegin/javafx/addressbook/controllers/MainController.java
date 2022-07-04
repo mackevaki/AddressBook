@@ -1,5 +1,6 @@
 package ru.javabegin.javafx.addressbook.controllers;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,10 +17,16 @@ import javafx.stage.Stage;
 import ru.javabegin.javafx.addressbook.Main;
 import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
 import ru.javabegin.javafx.addressbook.objects.Person;
+import org.controlsfx.control.textfield.CustomTextField;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
+
 
 public class MainController implements Initializable {
     private CollectionAddressBook addressBookImpl = new CollectionAddressBook();
@@ -68,10 +75,29 @@ public class MainController implements Initializable {
         tableColumnFio.setCellValueFactory(new PropertyValueFactory<Person, String>("fio"));
         tableColumnPhone.setCellValueFactory(new PropertyValueFactory<Person, String>("phoneNumber"));
 
+
+        //createClearable();
+        //setupClearButtonField(txtSearch);
         initListeners();
         fillData();
         initLoader();
     }
+
+    private void createClearable() {
+        txtSearch = (CustomTextField) TextFields.createClearableTextField();
+    }
+
+    private void setupClearButtonField(CustomTextField customTextField) {
+        try {
+            Method m = TextFields.class.getDeclaredMethod("setupClearButtonField", TextField.class, ObjectProperty.class);
+            m.setAccessible(true);
+            m.invoke(null, customTextField, customTextField.rightProperty());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
@@ -81,6 +107,7 @@ public class MainController implements Initializable {
     private void initLoader() {
         try {
             fxmlLoader.setLocation(Main.class.getResource("edit.fxml"));
+            fxmlLoader.setResources(ResourceBundle.getBundle("ru.javabegin.javafx.addressbook.locales.Locale", new Locale("ru")));
             fxmlEdit = fxmlLoader.load();
             editDialogController = fxmlLoader.getController();
         } catch (IOException e) {
@@ -145,7 +172,7 @@ public class MainController implements Initializable {
     private void showDialog() {
         if (editDialogStage == null) {
             editDialogStage = new Stage();
-            editDialogStage.setTitle("Редактирование записи");
+            editDialogStage.setTitle(resourceBundle.getString("editing"));
             editDialogStage.setMinWidth(300);
             editDialogStage.setMinHeight(150);
             editDialogStage.setResizable(false);

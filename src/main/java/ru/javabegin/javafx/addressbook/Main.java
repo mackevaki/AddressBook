@@ -14,14 +14,17 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
+
+    public static final Locale DEFAULT_LOCALE = new Locale("ru");
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Main.class.getResource("main.fxml"));
-        fxmlLoader.setResources(ResourceBundle.getBundle("ru.javabegin.javafx.addressbook.locales.Locale", new Locale("ru")));
+        fxmlLoader.setResources(ResourceBundle.getBundle("ru.javabegin.javafx.addressbook.locales.Locale", DEFAULT_LOCALE));
 
         Parent fxmlMain = fxmlLoader.load();
-        MainController mainController = new MainController();
+        MainController mainController = fxmlLoader.getController(); //new MainController();
         mainController.setMainStage(stage);
 
         Scene scene = new Scene(fxmlMain, 320, 240);

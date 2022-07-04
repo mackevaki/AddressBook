@@ -2,6 +2,7 @@ package ru.javabegin.javafx.addressbook.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,7 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ru.javabegin.javafx.addressbook.objects.Person;
 
-public class EditDialogController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class EditDialogController implements Initializable {
 
     @FXML
     private Label labelPhone;
@@ -31,7 +35,12 @@ public class EditDialogController {
     private Button btnCancel;
 
     private Person person;
+    private ResourceBundle resourceBundle;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resourceBundle = resources;
+    }
     public void actionClose(ActionEvent event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
