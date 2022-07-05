@@ -1,7 +1,9 @@
 package ru.javabegin.javafx.addressbook.controllers;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.javabegin.javafx.addressbook.Main;
@@ -19,9 +22,9 @@ import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
 import ru.javabegin.javafx.addressbook.objects.Person;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
+import utils.DialogManager;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Locale;
@@ -31,6 +34,9 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     private CollectionAddressBook addressBookImpl = new CollectionAddressBook();
     private Stage mainStage;
+
+    @FXML
+    private AnchorPane anchorPaneForSearch;
 
     @FXML
     private TableColumn<Person, String> tableColumnFio;
@@ -64,7 +70,7 @@ public class MainController implements Initializable {
     private EditDialogController editDialogController;
     private Stage editDialogStage;
     private ResourceBundle resourceBundle;
-
+    private ObservableList<Person> backupList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,16 +81,11 @@ public class MainController implements Initializable {
         tableColumnFio.setCellValueFactory(new PropertyValueFactory<Person, String>("fio"));
         tableColumnPhone.setCellValueFactory(new PropertyValueFactory<Person, String>("phoneNumber"));
 
+        txtSearch.setPromptText(resourceBundle.getString("search"));
 
-        //createClearable();
-        //setupClearButtonField(txtSearch);
         initListeners();
         fillData();
         initLoader();
-    }
-
-    private void createClearable() {
-        txtSearch = (CustomTextField) TextFields.createClearableTextField();
     }
 
     private void setupClearButtonField(CustomTextField customTextField) {
@@ -97,12 +98,9 @@ public class MainController implements Initializable {
         }
     }
 
-
-
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
-
 
     private void initLoader() {
         try {
@@ -137,6 +135,8 @@ public class MainController implements Initializable {
 
     private void fillData() {
         addressBookImpl.fillTestData();
+        backupList = FXCollections.observableArrayList();
+        backupList.addAll(addressBookImpl.getPersonList());
         tableAddressBook.setItems(addressBookImpl.getPersonList());
     }
 
@@ -153,20 +153,32 @@ public class MainController implements Initializable {
 
         Button clickedButton = (Button) source;
 
+        final Person selectedPerson = (Person) tableAddressBook.getSelectionModel().getSelectedItem();
+
         switch (clickedButton.getId()) {
             case "btnAdd" -> {
                 editDialogController.setPerson(new Person());
                 showDialog();
                 addressBookImpl.add(editDialogController.getPerson());
-
             }
             case "btnEdit" -> {
-                editDialogController.setPerson((Person) tableAddressBook.getSelectionModel().getSelectedItem());
+                if (!personIsSelected(selectedPerson)) {
+                    return;
+                }
+                editDialogController.setPerson(selectedPerson);
                 showDialog();
             }
-            case "btnDelete" -> addressBookImpl.delete((Person) tableAddressBook.getSelectionModel().getSelectedItem());
+            case "btnDelete" -> addressBookImpl.delete(selectedPerson);
         }
 
+    }
+
+    private boolean personIsSelected(Person selectedPerson) {
+        if (selectedPerson == null) {
+            DialogManager.showInfoDialog(resourceBundle.getString("error"), resourceBundle.getString("select_person"));
+            return false;
+        }
+        return true;
     }
 
     private void showDialog() {
@@ -184,4 +196,14 @@ public class MainController implements Initializable {
         editDialogStage.showAndWait();
     }
 
+    public void actionSearch(ActionEvent event) {
+        addressBookImpl.getPersonList().clear();
+
+        for (Person person :
+             backupList) {
+            if (person.getFio().toLowerCase().contains(txtSearch.getText().toLowerCase()) || person.getPhoneNumber().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
+                addressBookImpl.getPersonList().add(person);
+            }
+        }
+    }
 }

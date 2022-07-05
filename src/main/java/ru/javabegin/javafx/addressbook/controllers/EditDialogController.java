@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ru.javabegin.javafx.addressbook.objects.Person;
+import utils.DialogManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -48,9 +49,20 @@ public class EditDialogController implements Initializable {
     }
 
     public void actionSave(ActionEvent event) {
+        if (!checkValues()) {
+            return;
+        }
         person.setFio(txtFIO.getText());
         person.setPhoneNumber(txtPhoneNumber.getText());
         actionClose(event);
+    }
+
+    private boolean checkValues() {
+        if (txtFIO.getText().trim().length() == 0 || txtPhoneNumber.getText().trim().length() == 0) {
+            DialogManager.showInfoDialog(resourceBundle.getString("error"), resourceBundle.getString("fill_field"));
+            return false;
+        }
+        return true;
     }
 
     public void setPerson(Person person) {
