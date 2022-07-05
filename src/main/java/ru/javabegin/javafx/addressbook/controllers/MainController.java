@@ -19,19 +19,24 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.javabegin.javafx.addressbook.Main;
 import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
+import ru.javabegin.javafx.addressbook.objects.Lang;
 import ru.javabegin.javafx.addressbook.objects.Person;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
 import utils.DialogManager;
+import utils.LocaleManager;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 
-public class MainController implements Initializable {
+public class MainController extends Observable implements Initializable {
+    public static final String RU_CODE = "ru";
+    public static final String EN_CODE = "en";
     private CollectionAddressBook addressBookImpl = new CollectionAddressBook();
     private Stage mainStage;
 
@@ -64,6 +69,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Label labelCount;
+
+    @FXML
+    private ComboBox comboLocales;
 
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
@@ -114,6 +122,7 @@ public class MainController implements Initializable {
     }
 
     private void initListeners() {
+        // слушает изменения в коллекции для обновления надписи "Кол-во записей"
         addressBookImpl.getPersonList().addListener(new ListChangeListener<Person>() {
             @Override
             public void onChanged(Change<? extends Person> c) {
@@ -121,6 +130,7 @@ public class MainController implements Initializable {
             }
         });
 
+        // слушает двойное нажатие для редактирования записи
         tableAddressBook.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -130,10 +140,42 @@ public class MainController implements Initializable {
                 }
             }
         });
+
+        // слушает изменение языка
+        comboLocales.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Lang selectedLang = (Lang) comboLocales.getSelectionModel().getSelectedItem();
+                LocaleManager.setCurrentLang(selectedLang);
+
+
+                // уведомить всех слушателей, что произошла смена языка
+                setChanged();
+                notifyObservers(selectedLang);
+            }
+        });
     }
 
-
     private void fillData() {
+        fillTable();
+        fillLangComboBox();
+    }
+
+    private void fillLangComboBox() {
+        Lang langRU = new Lang(0, RU_CODE, resourceBundle.getString("ru"), LocaleManager.RU_LOCALE);
+        Lang langEN = new Lang(1, EN_CODE, resourceBundle.getString("en"), LocaleManager.EN_LOCALE);
+
+        comboLocales.getItems().add(langRU);
+        comboLocales.getItems().add(langEN);
+
+        if (LocaleManager.getCurrentLang() == null) { // по умолчанию показывать выбранный русский язык
+            comboLocales.getSelectionModel().select(0);
+        } else {
+            comboLocales.getSelectionModel().select(LocaleManager.getCurrentLang().getIndex());
+        }
+    }
+
+    private void fillTable() {
         addressBookImpl.fillTestData();
         backupList = FXCollections.observableArrayList();
         backupList.addAll(addressBookImpl.getPersonList());
