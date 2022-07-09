@@ -9,6 +9,8 @@ module ru.javabegin.javafx.addressbook {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires org.controlsfx.controls;
+    requires java.sql;
+    requires org.xerial.sqlitejdbc;
 
     opens ru.javabegin.javafx.addressbook to javafx.fxml;
     exports ru.javabegin.javafx.addressbook;

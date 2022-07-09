@@ -17,12 +17,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ru.javabegin.javafx.addressbook.Main;
-import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
-import ru.javabegin.javafx.addressbook.objects.Lang;
-import ru.javabegin.javafx.addressbook.objects.Person;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
+import ru.javabegin.javafx.addressbook.Main;
+import ru.javabegin.javafx.addressbook.interfaces.impls.DBAddressBook;
+import ru.javabegin.javafx.addressbook.objects.Lang;
+import ru.javabegin.javafx.addressbook.objects.Person;
 import utils.DialogManager;
 import utils.LocaleManager;
 
@@ -37,7 +37,7 @@ import java.util.ResourceBundle;
 public class MainController extends Observable implements Initializable {
     public static final String RU_CODE = "ru";
     public static final String EN_CODE = "en";
-    private CollectionAddressBook addressBookImpl = new CollectionAddressBook();
+    private DBAddressBook addressBookImpl = new DBAddressBook();
     private Stage mainStage;
 
     @FXML
@@ -148,7 +148,6 @@ public class MainController extends Observable implements Initializable {
                 Lang selectedLang = (Lang) comboLocales.getSelectionModel().getSelectedItem();
                 LocaleManager.setCurrentLang(selectedLang);
 
-
                 // уведомить всех слушателей, что произошла смена языка
                 setChanged();
                 notifyObservers(selectedLang);
@@ -176,10 +175,8 @@ public class MainController extends Observable implements Initializable {
     }
 
     private void fillTable() {
-        addressBookImpl.fillTestData();
-        backupList = FXCollections.observableArrayList();
-        backupList.addAll(addressBookImpl.getPersonList());
-        tableAddressBook.setItems(addressBookImpl.getPersonList());
+        ObservableList<Person> list = addressBookImpl.findAll();
+        tableAddressBook.setItems(list);
     }
 
     private void updateCountLabel() {
