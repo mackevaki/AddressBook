@@ -37,11 +37,13 @@ public class EditDialogController implements Initializable {
 
     private Person person;
     private ResourceBundle resourceBundle;
+    private boolean saveClicked = false; // для определения нажатой кнопки
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resourceBundle = resources;
     }
+
     public void actionClose(ActionEvent event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -54,6 +56,7 @@ public class EditDialogController implements Initializable {
         }
         person.setFio(txtFIO.getText());
         person.setPhoneNumber(txtPhoneNumber.getText());
+        saveClicked = true;
         actionClose(event);
     }
 
@@ -69,6 +72,7 @@ public class EditDialogController implements Initializable {
         if (person == null) {
             return;
         }
+        saveClicked = false;
         this.person = person;
         txtFIO.setText(person.getFio());
         txtPhoneNumber.setText(person.getPhoneNumber());
@@ -76,5 +80,9 @@ public class EditDialogController implements Initializable {
 
     public Person getPerson() {
         return person;
+    }
+
+    public boolean isSaveClicked() {
+        return saveClicked;
     }
 }

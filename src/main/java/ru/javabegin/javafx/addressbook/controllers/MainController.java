@@ -78,7 +78,6 @@ public class MainController extends Observable implements Initializable {
     private EditDialogController editDialogController;
     private Stage editDialogStage;
     private ResourceBundle resourceBundle;
-    private ObservableList<Person> backupList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -135,8 +134,9 @@ public class MainController extends Observable implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-                    editDialogController.setPerson((Person) tableAddressBook.getSelectionModel().getSelectedItem());
-                    showDialog();
+//                    editDialogController.setPerson((Person) tableAddressBook.getSelectionModel().getSelectedItem());
+//                    showDialog();
+                    btnEdit.fire();
                 }
             }
         });
@@ -194,11 +194,16 @@ public class MainController extends Observable implements Initializable {
 
         final Person selectedPerson = (Person) tableAddressBook.getSelectionModel().getSelectedItem();
 
+        boolean research = false;
+
         switch (clickedButton.getId()) {
             case "btnAdd" -> {
                 editDialogController.setPerson(new Person());
                 showDialog();
-                addressBookImpl.add(editDialogController.getPerson());
+                if (editDialogController.isSaveClicked()) {
+                    addressBookImpl.add(editDialogController.getPerson());
+                    research = true;
+                }
             }
             case "btnEdit" -> {
                 if (!personIsSelected(selectedPerson)) {
@@ -206,10 +211,31 @@ public class MainController extends Observable implements Initializable {
                 }
                 editDialogController.setPerson(selectedPerson);
                 showDialog();
+                if (editDialogController.isSaveClicked()) {
+                    addressBookImpl.update(selectedPerson);
+                    research = true;
+                }
             }
-            case "btnDelete" -> addressBookImpl.delete(selectedPerson);
+            case "btnDelete" -> {
+                if (!personIsSelected(selectedPerson) || !(confirmDelete())) {
+                    return;
+                }
+                research = true;
+                addressBookImpl.delete(selectedPerson);
+            }
         }
 
+        if (research) {
+            actionSearch(event);
+        }
+    }
+
+    private boolean confirmDelete() {
+        if (DialogManager.showConfirmDialog(resourceBundle.getString("confirm"), resourceBundle.getString("confirm_delete")).get() == ButtonType.OK) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean personIsSelected(Person selectedPerson) {
@@ -236,13 +262,10 @@ public class MainController extends Observable implements Initializable {
     }
 
     public void actionSearch(ActionEvent event) {
-        addressBookImpl.getPersonList().clear();
-
-        for (Person person :
-             backupList) {
-            if (person.getFio().toLowerCase().contains(txtSearch.getText().toLowerCase()) || person.getPhoneNumber().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
-                addressBookImpl.getPersonList().add(person);
-            }
+        if (txtSearch.getText().trim().length() == 0) {
+            addressBookImpl.findAll();
         }
+
+        addressBookImpl.find(txtSearch.getText());
     }
 }
