@@ -58,8 +58,8 @@ public class Main extends Application implements Observer {
     private void createGUI(Locale locale) {
         currentRoot = loadFXML(locale);
         Scene scene = new Scene(currentRoot, 300, 275);
-        stage.setMinHeight(500);
-        stage.setMinWidth(400);
+        stage.setMinHeight(700);
+        stage.setMinWidth(600);
         stage.setScene(scene);
         stage.show();
 
@@ -75,5 +75,10 @@ public class Main extends Application implements Observer {
         Lang lang = (Lang) arg;
         VBox newNode = loadFXML(lang.getLocale()); // получить новое дерево компонентов с нужной локалью
         currentRoot.getChildren().setAll(newNode.getChildren()); // заменить старые дочерние компонента на новые - с другой локалью
+    }
+
+    @Override
+    public void stop() throws Exception {
+        System.exit(0);
     }
 }
