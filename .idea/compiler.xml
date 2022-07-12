@@ -13,4 +13,9 @@
       <module name="AddressBook" target="17" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AddressBook" options="--add-exports javafx.graphics/com.sun.javafx.application=ru.javabegin.javafx.addressbook" />
+    </option>
+  </component>
 </project>

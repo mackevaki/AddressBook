@@ -11,8 +11,11 @@ module ru.javabegin.javafx.addressbook {
     requires org.controlsfx.controls;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires javafx.graphics;
 
-    opens ru.javabegin.javafx.addressbook to javafx.fxml;
+    opens ru.javabegin.javafx.addressbook to javafx.fxml, javafx.graphics;
+
+    exports ru.javabegin.javafx.addressbook.preloader to javafx.graphics;
     exports ru.javabegin.javafx.addressbook;
     exports ru.javabegin.javafx.addressbook.controllers;
     exports ru.javabegin.javafx.addressbook.objects;

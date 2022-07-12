@@ -1,14 +1,14 @@
 package ru.javabegin.javafx.addressbook;
 
 import javafx.application.Application;
+import javafx.application.Preloader;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.javabegin.javafx.addressbook.controllers.MainController;
-import ru.javabegin.javafx.addressbook.interfaces.impls.CollectionAddressBook;
 import ru.javabegin.javafx.addressbook.objects.Lang;
+import ru.javabegin.javafx.addressbook.preloader.TestPreloader;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -32,6 +32,41 @@ public class Main extends Application implements Observer {
         createGUI(DEFAULT_LOCALE);
     }
 
+    @Override
+    public void init() throws Exception {
+        // имитация загрузки
+        for (int i = 0; i < 100; i++) {
+            Thread.sleep(15);
+            super.notifyPreloader(new Preloader.ProgressNotification(i));
+        }
+    }
+
+    public static void main(String[] args) {
+        System.setProperty("javafx.preloader", TestPreloader.class.getName());
+        Application.launch(Main.class, args);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Lang lang = (Lang) arg;
+        VBox newNode = loadFXML(lang.getLocale()); // получить новое дерево компонентов с нужной локалью
+        currentRoot.getChildren().setAll(newNode.getChildren()); // заменить старые дочерние компонента на новые - с другой локалью
+    }
+
+    private void createGUI(Locale locale) {
+        currentRoot = loadFXML(locale);
+        Scene scene = new Scene(currentRoot, 300, 275);
+        stage.setMinHeight(700);
+        stage.setMinWidth(600);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        System.exit(0);
+    }
+
     // загружает дерево компонентов и возвращает в виде VBox (корневой элемент в FXML)
     private VBox loadFXML(Locale locale) {
         fxmlLoader = new FXMLLoader();
@@ -53,32 +88,5 @@ public class Main extends Application implements Observer {
         }
 
         return node;
-    }
-
-    private void createGUI(Locale locale) {
-        currentRoot = loadFXML(locale);
-        Scene scene = new Scene(currentRoot, 300, 275);
-        stage.setMinHeight(700);
-        stage.setMinWidth(600);
-        stage.setScene(scene);
-        stage.show();
-
-    }
-
-
-    public static void main(String[] args) {
-        launch();
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        Lang lang = (Lang) arg;
-        VBox newNode = loadFXML(lang.getLocale()); // получить новое дерево компонентов с нужной локалью
-        currentRoot.getChildren().setAll(newNode.getChildren()); // заменить старые дочерние компонента на новые - с другой локалью
-    }
-
-    @Override
-    public void stop() throws Exception {
-        System.exit(0);
     }
 }
